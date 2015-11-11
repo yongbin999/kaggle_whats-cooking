@@ -263,9 +263,11 @@ if __name__ == '__main__':
 
 
     outfile = open( 'submission_results.csv', 'w' )
-    outfile.write( 'id' + '\t' + 'cuisine' + '\n')
+    outfile.write( 'id' + ',' + 'cuisine' + '\n')
     for key, value in sorted( output.items() ):
-        outfile.write( str(key) + '\t' + str(value) + '\n' )
+        outfile.write( str(key) + ',' + str(value) + '\n' )
+
+
 
 
     print "done"
