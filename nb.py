@@ -7,59 +7,22 @@ import  json
 from collections import defaultdict
 
 
-def tokenize_doc(json_data):
-    """
-    IMPLEMENT ME!
+def get_stats_count(training_set):
+    cuisine_type_count = defaultdict(float)
+    for row in training_set:
+        cuisine_type_count[row['cuisine']] +=1
 
-    Tokenize a document and return its bag-of-words representation.
-    doc - a string representing a document.
-    returns a dictionary mapping each word to the number of times it appears in doc.
-    """
+    return cuisine_type_count
 
-    words = {}
-    for w in json_data['ingredients']:
-        if w not in words:
-            words[w] =0
-        words[w] +=1
-    
-    return words
+def get_stats_percent(cuisine_type_count):
+    types = len(cuisine_type_count)
+    size = sum(cuisine_type_count.values())
+    ##print 'size of the training data' +str(len(training)) + ' size of testing' +str(len(testing))
+    cuisine_type_count_percent = {w: round(c/size,3) for (w,c) in cuisine_type_count.items() }
+    cuisine_type_count_percent = sorted(cuisine_type_count.items(), key=lambda x: x[1], reverse=1)
 
+    return cuisine_type_count_percent
 
-def train_model(self, num_docs=None):
-    """
-    This function processes the entire training set using the global PATH
-    variable above.  It makes use of the tokenize_doc and update_model
-    functions you will implement.
-
-    num_docs: set this to e.g. 10 to train on only 10 docs from each category.
-    """
-
-    if num_docs is not None:
-        print "Limiting to only %s docs per clas" % num_docs
-
-    pos_path = os.path.join(TRAIN_DIR, POS_LABEL)
-    neg_path = os.path.join(TRAIN_DIR, NEG_LABEL)
-    print "Starting training with paths %s and %s" % (pos_path, neg_path)
-    for (p, label) in [ (pos_path, POS_LABEL), (neg_path, NEG_LABEL) ]:
-        filenames = os.listdir(p)
-        if num_docs is not None: filenames = filenames[:num_docs]
-        for f in filenames:
-            with open(os.path.join(p,f),'r') as doc:
-                content = doc.read()
-                self.tokenize_and_update_model(content, label)
-    self.report_statistics_after_training()
-
-def report_statistics_after_training(self):
-    """
-    Report a number of statistics after training.
-    """
-
-    print "REPORTING CORPUS STATISTICS"
-    print "NUMBER OF DOCUMENTS IN POSITIVE CLASS:", self.class_total_doc_counts[POS_LABEL]
-    print "NUMBER OF DOCUMENTS IN NEGATIVE CLASS:", self.class_total_doc_counts[NEG_LABEL]
-    print "NUMBER OF TOKENS IN POSITIVE CLASS:", self.class_total_word_counts[POS_LABEL]
-    print "NUMBER OF TOKENS IN NEGATIVE CLASS:", self.class_total_word_counts[NEG_LABEL]
-    print "VOCABULARY SIZE: NUMBER OF UNIQUE WORDTYPES IN TRAINING CORPUS:", len(self.vocab)
 
 def get_model(training_set):
 
@@ -77,24 +40,24 @@ def get_model(training_set):
     return cuisine_type_bag
 
 
-def tokenize_and_update_model(self, doc, label):
-    p
-def top_n(self, label, n):
-    """
-    Implement me!
 
-    Returns the most frequent n tokens for documents with class 'label'.
+def tokenize_doc(json_data):
     """
-    return sorted(self.class_word_counts[label].items(), key=lambda (w,c): -c)[:n]
+    IMPLEMENT ME!
 
-def p_word_given_label(word,training_types_count,training_types_bows_count, label):
+    Tokenize a document and return its bag-of-words representation.
+    doc - a string representing a document.
+    returns a dictionary mapping each word to the number of times it appears in doc.
     """
-    Implement me!
 
-    Returns the probability of word given label (i.e., P(word|label))
-    according to this NB model.
-    """
-    return training_types_bows_count[label][word] / len(training_types_count[label])
+    words = {}
+    for w in json_data['ingredients']:
+        if w not in words:
+            words[w] =0
+        words[w] +=1
+    
+    return words
+
 
 def p_word_given_label_and_psuedocount(word,training_types_count,training_types_bows_count, label, alpha):
     """
@@ -145,6 +108,18 @@ def unnormalized_log_posterior(test_bow,training_types_count,training_types_bows
     
     return log_prior(training_types_count,label) + log_likelihood(test_bow, training_types_count,training_types_bows_count, label, alpha)
 
+
+def likelihood_ratio(self, word, alpha):
+    """
+    Implement me!
+
+    alpha - psuedocount parameter.
+    Returns the ratio of P(word|pos) to P(word|neg).
+    """
+    pass
+
+
+
 def classify(bow,training_types_count,training_types_bows_count, alpha):
     """
     for each label calculate the probability of label given bow
@@ -154,15 +129,6 @@ def classify(bow,training_types_count,training_types_bows_count, alpha):
         dict_oflargest[label] = unnormalized_log_posterior(bow, training_types_count,training_types_bows_count, label, alpha)
 
     return max(dict_oflargest, key=dict_oflargest.get)
-
-def likelihood_ratio(self, word, alpha):
-    """
-    Implement me!
-
-    alpha - psuedocount parameter.
-    Returns the ratio of P(word|pos) to P(word|neg).
-    """
-    return self.p_word_given_label_and_psuedocount(word, POS_LABEL, alpha) / self.p_word_given_label_and_psuedocount(word, NEG_LABEL, alpha)
 
 def evaluate_classifier_accuracy(testing_set,training_types_count,training_types_bows_count, alpha):
     """
@@ -176,12 +142,10 @@ def evaluate_classifier_accuracy(testing_set,training_types_count,training_types
     numofcorrect = 0.0;
     totalnumdocs = len(testing_set);
 
-
     for row in testing_set:
         evualuated_label = classify(tokenize_doc(row),training_types_count,training_types_bows_count,alpha)
         if evualuated_label ==row['cuisine']:
             numofcorrect+=1.0
-
 
     return numofcorrect / totalnumdocs
 
@@ -208,13 +172,6 @@ def plot_psuedocount_vs_accuracy(psuedocounts, accuracies):
 
 
 
-
-
-
-
-
-
-
 if __name__ == '__main__':
     import ast
     json_data = open(sys.argv[1],'r').read()
@@ -228,25 +185,20 @@ if __name__ == '__main__':
 
 
     ## count the stats on cusine types 
-    cuisine_type_count = defaultdict(float)
-    for row in training:
-        cuisine_type_count[row['cuisine']] +=1
-
-    types = len(cuisine_type_count)
-    print 'size of the training data' +str(len(training)) + ' size of testing' +str(len(testing))
-
-    cuisine_type_count_percent = {w: round(c/len(training),3) for (w,c) in cuisine_type_count.items() }
-    cuisine_type_count_percent = sorted(cuisine_type_count.items(), key=lambda x: x[1], reverse=1)
-
+    cuisine_type_count = get_stats_count(training)
+    cuisine_type_count_percent = get_stats_percent(cuisine_type_count)
     print json.dumps(cuisine_type_count_percent)
+
+    ##save stat data on 20 different types of cuisine probabilty
     with open('training_types_count', 'w') as f:
         f.write(json.dumps(cuisine_type_count))
 
 
-
-
     ## create the training model
     cuisine_type_bag = get_model(training)
+    ## save training model bag of words by cusine types
+    with open('training_types_bows_count', 'w') as f:
+        f.write(json.dumps(cuisine_type_bag))
 
 
     print ""
@@ -254,20 +206,15 @@ if __name__ == '__main__':
     ##print cuisine_type_bag['irish']
     top10 = sorted(cuisine_type_bag['irish'].items(), key=lambda x: x[1], reverse=1)
     print top10[:10]
-
     print ""
     print "italian ingredients bow counts"
     ##print cuisine_type_bag['irish']
     top10 = sorted(cuisine_type_bag['italian'].items(), key=lambda x: x[1], reverse=1)
     print top10[:10]
 
-    ## bag of words by cusine types by 
-    with open('training_types_bows_count', 'w') as f:
-        f.write(json.dumps(cuisine_type_bag))
 
-
-    ''' single item test accuracy
-    ## test teh model accuracy
+    '''
+     #single item test accuracy
     print ""
     print "testing docs"
     print testing [0]
@@ -296,4 +243,35 @@ if __name__ == '__main__':
     print ""
 
     '''
+
+
+    print ""
+    print 'create sameple submission:'
+    '''
+            id  cuisine
+        35203   italian
+        17600   italian
+    '''
+
+    json_data = open(sys.argv[2],'r').read()
+    data = ast.literal_eval(json_data)
+    print(data[0])
+
+    output = defaultdict(float)
+    for items in data:
+        output[items['id']] = classify(tokenize_doc(items),cuisine_type_count,cuisine_type_bag, 0.01)
+
+
+    outfile = open( 'submission_results.csv', 'w' )
+    outfile.write( 'id' + '\t' + 'cuisine' + '\n')
+    for key, value in sorted( output.items() ):
+        outfile.write( str(key) + '\t' + str(value) + '\n' )
+
+
+    print "done"
+
+
+
+
+
 
