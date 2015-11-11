@@ -61,14 +61,24 @@ def report_statistics_after_training(self):
     print "NUMBER OF TOKENS IN NEGATIVE CLASS:", self.class_total_word_counts[NEG_LABEL]
     print "VOCABULARY SIZE: NUMBER OF UNIQUE WORDTYPES IN TRAINING CORPUS:", len(self.vocab)
 
-def update_model(self, bow, label):
-    pass
+def get_model(training_set):
+
+    cuisine_type_bag = defaultdict()
+    for row in training_set:
+        for ingredient in row['ingredients']:
+            if row['cuisine'] not in cuisine_type_bag:
+                cuisine_type_bag[row['cuisine']] = defaultdict(float)
+
+            if ingredient not in cuisine_type_bag[row['cuisine']]:
+                cuisine_type_bag[row['cuisine']][ingredient] =1
+            else:
+                cuisine_type_bag[row['cuisine']][ingredient]+=1
+    
+    return cuisine_type_bag
 
 
 def tokenize_and_update_model(self, doc, label):
-    bow = tokenize_doc(doc)
-    self.update_model(bow, label)
-
+    p
 def top_n(self, label, n):
     """
     Implement me!
@@ -236,16 +246,8 @@ if __name__ == '__main__':
 
 
     ## create the training model
-    cuisine_type_bag = defaultdict()
-    for row in training:
-        for ingredient in row['ingredients']:
-            if row['cuisine'] not in cuisine_type_bag:
-                cuisine_type_bag[row['cuisine']] = defaultdict(float)
+    cuisine_type_bag = get_model(training)
 
-            if ingredient not in cuisine_type_bag[row['cuisine']]:
-                cuisine_type_bag[row['cuisine']][ingredient] =1
-            else:
-                cuisine_type_bag[row['cuisine']][ingredient]+=1
 
     print ""
     print "irish ingredients bow counts"
@@ -264,7 +266,7 @@ if __name__ == '__main__':
         f.write(json.dumps(cuisine_type_bag))
 
 
-
+    ''' single item test accuracy
     ## test teh model accuracy
     print ""
     print "testing docs"
@@ -277,20 +279,21 @@ if __name__ == '__main__':
     print "full test accuracy using alpha =0.01"
     accuracy = evaluate_classifier_accuracy(testing, cuisine_type_count,cuisine_type_bag, 0.01)
     print accuracy
+    '''
 
 
-
-
+    ''' find alpha that max the accuracy
     ## graph some reulst using different alpha
     print "plot data"
     listofalpha = [0.000001,0.00001,0.0001,0.001,0.01,0.1,1,10,100]
     results = {}
     for n in listofalpha:
         results[n]=evaluate_classifier_accuracy(testing, cuisine_type_count,cuisine_type_bag,n)
-        print "working on alpha: "+ n
+        print "working on alpha: "+ str(n)
     keys = tuple(x[0] for x in sorted(results.items()))
     values = tuple(x[1] for x in sorted(results.items()))
     print plot_psuedocount_vs_accuracy(keys, values)
     print ""
 
+    '''
 
