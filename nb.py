@@ -167,7 +167,20 @@ def plot_psuedocount_vs_accuracy(psuedocounts, accuracies):
     plt.show()
 
 
+def output_csv_submission(testing_filename,cuisine_type_count,cuisine_type_bag, alpha):
+    json_data = open(testing_filename,'r').read()
+    data = ast.literal_eval(json_data)
+    ##print(data[0])
 
+    output = defaultdict(float)
+    for items in data:
+        output[items['id']] = classify(tokenize_doc(items),cuisine_type_count,cuisine_type_bag, alpha)
+
+
+    outfile = open( 'submission_results.csv', 'w' )
+    outfile.write( 'id' + ',' + 'cuisine' + '\n')
+    for key, value in sorted( output.items() ):
+        outfile.write( str(key) + ',' + str(value) + '\n' )
 
 
 
@@ -228,11 +241,11 @@ if __name__ == '__main__':
     print accuracy
     '''
 
-
-    ''' find alpha that max the accuracy
+    '''
+    #find alpha that max the accuracy
     ## graph some reulst using different alpha
     print "plot data"
-    listofalpha = [0.000001,0.00001,0.0001,0.001,0.01,0.1,1,10,100]
+    listofalpha = [0.006,0.0065,0.007,0.0075,0.008,0.0085,0.009,0.0095]
     results = {}
     for n in listofalpha:
         results[n]=evaluate_classifier_accuracy(testing, cuisine_type_count,cuisine_type_bag,n)
@@ -241,8 +254,8 @@ if __name__ == '__main__':
     values = tuple(x[1] for x in sorted(results.items()))
     print plot_psuedocount_vs_accuracy(keys, values)
     print ""
-
     '''
+    
 
 
     print ""
@@ -253,20 +266,9 @@ if __name__ == '__main__':
         17600   italian
     '''
 
-    json_data = open(sys.argv[2],'r').read()
-    data = ast.literal_eval(json_data)
-    print(data[0])
-
-    output = defaultdict(float)
-    for items in data:
-        output[items['id']] = classify(tokenize_doc(items),cuisine_type_count,cuisine_type_bag, 0.01)
-
-
-    outfile = open( 'submission_results.csv', 'w' )
-    outfile.write( 'id' + ',' + 'cuisine' + '\n')
-    for key, value in sorted( output.items() ):
-        outfile.write( str(key) + ',' + str(value) + '\n' )
-
+    cuisine_type_count = get_stats_count(data)
+    cuisine_type_bag = get_model(data)
+    output_csv_submission(sys.argv[2],cuisine_type_count,cuisine_type_bag, 0.01)
 
 
 
