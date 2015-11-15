@@ -168,7 +168,7 @@ def plot_psuedocount_vs_accuracy(psuedocounts, accuracies):
 
 
 def output_csv_submission(testing_filename,cuisine_type_count,cuisine_type_bag, alpha):
-    json_data = open(testing_filename,'r').read()
+    json_data = open('inputs/'+testing_filename,'r').read()
     data = ast.literal_eval(json_data)
     ##print(data[0])
 
@@ -177,7 +177,7 @@ def output_csv_submission(testing_filename,cuisine_type_count,cuisine_type_bag, 
         output[items['id']] = classify(tokenize_doc(items),cuisine_type_count,cuisine_type_bag, alpha)
 
 
-    outfile = open( 'submission_results.csv', 'w' )
+    outfile = open( 'outputs/submission_results.csv', 'w' )
     outfile.write( 'id' + ',' + 'cuisine' + '\n')
     for key, value in sorted( output.items() ):
         outfile.write( str(key) + ',' + str(value) + '\n' )
@@ -187,7 +187,7 @@ def output_csv_submission(testing_filename,cuisine_type_count,cuisine_type_bag, 
 
 if __name__ == '__main__':
     import ast
-    json_data = open(sys.argv[1],'r').read()
+    json_data = open('inputs/'+sys.argv[1],'r').read()
     data = ast.literal_eval(json_data)
     print(data[0])
 
@@ -203,14 +203,14 @@ if __name__ == '__main__':
     print json.dumps(cuisine_type_count_percent)
 
     ##save stat data on 20 different types of cuisine probabilty
-    with open('training_types_count', 'w') as f:
+    with open('outputs/training_types_count', 'w') as f:
         f.write(json.dumps(cuisine_type_count))
 
 
     ## create the training model
     cuisine_type_bag = get_model(training)
     ## save training model bag of words by cusine types
-    with open('training_types_bows_count', 'w') as f:
+    with open('outputs/training_types_bows_count', 'w') as f:
         f.write(json.dumps(cuisine_type_bag))
 
 
