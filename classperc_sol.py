@@ -73,8 +73,6 @@ def construct_dataset(training_set):
     """
 
     dataset = []
-
-    num_inst = 25000
     print "[constructing dataset...]"
     for row in training_set:
         dataset.append((tokenize_doc(row), row['cuisine']))
@@ -87,10 +85,6 @@ def construct_dataset(training_set):
 
 def fullseq_features(bow, stat_cuisine):
     """
-    !! MAKE SURE YOU UNDERSTAND WHAT IS GOING ON HERE                     !!
-    !! You will need to implement/use a function very similar to this for !!
-    !! the structured perceptron code.                                    !!
-
     The full f(x,y) function. Pass in features (represented as a dictionary) and
     a string label. Returns one big feature vector (that is used for all classes).
     """
@@ -158,19 +152,22 @@ def train(examples, stat_cuisine, stepsize=1, numpasses=10, do_averaging=False, 
             predlabel = predict_multiclass(bow, weights, all_feat_vec)
             if predlabel != goldlabel:
                 # compute gradient
+                ##positive add for goldfeats
                 goldfeats = all_feat_vec[goldlabel]
+                for feat_name, feat_value in goldfeats.iteritems():
+                    weights[feat_name] += stepsize * feat_value
+                    weightSums[feat_name] += (t-1) * stepsize * feat_value
 
+                ## negative for bad feats
                 for cuisine in stat_cuisine:
                     if cuisine != goldlabel:
-                        predfeats = all_feat_vec[cuisine]  ## each except the gold
-                        
-                        featdelta = dict_subtract(goldfeats, predfeats)
+                        wrongfeats = all_feat_vec[cuisine] 
 
-                        for feat_name, feat_value in featdelta.iteritems():
-                            weights[feat_name] += stepsize * feat_value
-                            weightSums[feat_name] += (t-1) * stepsize * feat_value
+                        for feat_name, feat_value in wrongfeats.iteritems():
+                            weights[feat_name] -= stepsize * feat_value
+                            weightSums[feat_name] -= (t-1) * stepsize * feat_value
         end = time.time()
-        print "time used: " + str(round(end - start,2))
+        print "\ttime used: " + str(round(end - start,2))
         print "TR RAW EVAL:",
         train_acc.append(do_evaluation(examples, weights,all_feat_vec))
 
@@ -204,7 +201,7 @@ def do_evaluation(examples, weights, stat_cuisine):
     print "%d/%d = %.4f accuracy" % (num_correct, num_total, num_correct/num_total)
     return num_correct/num_total
 
-def plot_accuracy_vs_iteration(train_acc, test_acc, avg_test_acc, naive_bayes_acc = 0.83):
+def plot_accuracy_vs_iteration(train_acc, test_acc, avg_test_acc, naive_bayes_acc = 0.73):
     """
     Plot the vanilla perceptron accuracy on the trainning set and test set
     and the averaged perceptron accuracy on the test set.
@@ -238,8 +235,8 @@ if __name__=='__main__':
     training = data[slicenum:]
     testing = data[:slicenum]
 
-    training_set = construct_dataset(training)
-    test_set = construct_dataset(testing)
+    training_set = construct_dataset(data)
+    ##test_set = construct_dataset(testing)
     ##print training_set[0]
 
     stat_cuisine = get_stats_count(training)
@@ -248,5 +245,5 @@ if __name__=='__main__':
     ##print len(stat_ingredient)
 
     ##sol_dict = train(training_set, stat_cuisine,stepsize=1, numpasses=1, do_averaging=True, devdata=None)
-    sol_dict = train(training_set, stat_cuisine,stepsize=1, numpasses=10, do_averaging=True, devdata=test_set)
+    sol_dict = train(training_set, stat_cuisine,stepsize=1, numpasses=10, do_averaging=True, devdata=None)
     plot_accuracy_vs_iteration(sol_dict['train_acc'], sol_dict['test_acc'], sol_dict['avg_test_acc'])
