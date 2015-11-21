@@ -168,7 +168,7 @@ def plot_psuedocount_vs_accuracy(psuedocounts, accuracies):
 
 
 def output_csv_submission(testing_filename,cuisine_type_count,cuisine_type_bag, alpha):
-    json_data = open('inputs/'+testing_filename,'r').read()
+    json_data = open(testing_filename,'r').read()
     data = ast.literal_eval(json_data)
     ##print(data[0])
 
@@ -187,7 +187,13 @@ def output_csv_submission(testing_filename,cuisine_type_count,cuisine_type_bag, 
 
 if __name__ == '__main__':
     import ast
-    json_data = open('inputs/'+sys.argv[1],'r').read()
+
+    if len(sys.argv) > 1:
+        json_data = open(sys.argv[1],'r').read()
+    else:
+        print 'no training files defined: python nb.py "___train.json___"'
+        sys.exit()
+
     data = ast.literal_eval(json_data)
     print(data[0])
 
@@ -268,8 +274,11 @@ if __name__ == '__main__':
 
     cuisine_type_count = get_stats_count(data)
     cuisine_type_bag = get_model(data)
-    output_csv_submission(sys.argv[2],cuisine_type_count,cuisine_type_bag, 0.01)
-
+    if len(sys.argv) > 2:
+        output_csv_submission(sys.argv[2],cuisine_type_count,cuisine_type_bag, 0.01)
+    else:
+        print 'no test file defined: python nb.py "___training___"  "___test___"'
+        sys.exit()
 
 
     print "done"
