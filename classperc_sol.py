@@ -170,7 +170,7 @@ def train(examples, stat_cuisine, stepsize=1, numpasses=10, do_averaging=False, 
                             weights[feat_name] += stepsize * feat_value
                             weightSums[feat_name] += (t-1) * stepsize * feat_value
         end = time.time()
-        print end - start
+        print "time used: " + str(round(end - start,2))
         print "TR RAW EVAL:",
         train_acc.append(do_evaluation(examples, weights,all_feat_vec))
 
@@ -196,7 +196,7 @@ def do_evaluation(examples, weights, stat_cuisine):
     """
     num_correct, num_total = 0, 0
     for feats, goldlabel in examples:
-        all_feat_vec = fullseq_features(feats,all_feat_vec)
+        all_feat_vec = fullseq_features(feats,stat_cuisine)
         predlabel = predict_multiclass(feats, weights,all_feat_vec)
         if predlabel == goldlabel:
             num_correct += 1.0
@@ -247,6 +247,6 @@ if __name__=='__main__':
 
     ##print len(stat_ingredient)
 
-    sol_dict = train(training_set, stat_cuisine,stepsize=1, numpasses=1, do_averaging=True, devdata=None)
-    ##sol_dict = train(training_set, stat_cuisine,stepsize=1, numpasses=1, do_averaging=True, devdata=test_set)
+    ##sol_dict = train(training_set, stat_cuisine,stepsize=1, numpasses=1, do_averaging=True, devdata=None)
+    sol_dict = train(training_set, stat_cuisine,stepsize=1, numpasses=10, do_averaging=True, devdata=test_set)
     plot_accuracy_vs_iteration(sol_dict['train_acc'], sol_dict['test_acc'], sol_dict['avg_test_acc'])
