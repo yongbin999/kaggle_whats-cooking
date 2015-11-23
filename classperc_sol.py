@@ -12,13 +12,6 @@ import random
 ###################################
 # Utilities
 
-def dict_subtract(vec1, vec2):
-    """treat vec1 and vec2 as dict representations of sparse vectors"""
-    out = defaultdict(float)
-    out.update(vec1)
-    for k in vec2: out[k] -= vec2[k]
-    return dict(out)
-
 def dict_argmax(dct):
     """Return the key whose value is largest. In other words: argmax_k dct[k]"""
     return max(dct.iterkeys(), key=lambda k: dct[k])
@@ -57,12 +50,32 @@ def get_stats_count(training_set):
     return cuisine_type_count
 
 def get_ingredient_count(training_set):
-    cuisine_type_count = defaultdict(float)
+    ing_count = defaultdict(float)
     for row in training_set:
         for ingredient in row['ingredients']:
-            cuisine_type_count[ingredient] +=1
+            ing_count[ingredient] +=1
 
-    return cuisine_type_count
+    return ing_count
+
+def get_ingredient_exists_in(cuisine_type_count, cuisine_stats):
+    pass
+
+
+def get_bow_cuisine(training_set):
+
+    cuisine_type_bag = defaultdict()
+    for row in training_set:
+        for ingredient in row['ingredients']:
+            if row['cuisine'] not in cuisine_type_bag:
+                cuisine_type_bag[row['cuisine']] = defaultdict(float)
+
+            if ingredient not in cuisine_type_bag[row['cuisine']]:
+                cuisine_type_bag[row['cuisine']][ingredient] =1
+            else:
+                cuisine_type_bag[row['cuisine']][ingredient]+=1
+    
+    return cuisine_type_bag
+
 
 def construct_dataset(training_set):
     """
@@ -81,7 +94,7 @@ def construct_dataset(training_set):
 
 
 ###############################
-# YOUR CODE GOES BELOW
+
 
 def fullseq_features(bow, stat_cuisine):
     """
@@ -91,12 +104,18 @@ def fullseq_features(bow, stat_cuisine):
     all_feat_vec = defaultdict()
     for cuisine in stat_cuisine:
         feat_vec = defaultdict(float)
-        for word, value in bow.iteritems():
-            feat_vec["%s_%s" % (cuisine, word)] = value
+
+        ##split ingredient into individual words
+        for ingredient, value in bow.iteritems():
+            #ing_word = ingredient.split(' ')
+            #for word in ing_word:
+                feat_vec["%s_%s" % (cuisine, ingredient)] = value
+
         all_feat_vec[cuisine] = feat_vec
+
     return all_feat_vec
 
-def predict_multiclass(bow, weights, all_feat_vec):  ##takes 1 vec
+def predict_multiclass(bow, weights, all_feat_vec):  ##takes list of same vec but diff cuisine
     """
     Takes a bag of words represented as a dictionary and a weight vector that contains
     weights for features of each label (represented as a dictionary) and
@@ -144,7 +163,11 @@ def train(examples, stat_cuisine, stepsize=1, numpasses=10, do_averaging=False, 
         start = time.time()
         print "\tTraining iteration %d" % pass_iteration
         random.shuffle(examples)
-        for bow, goldlabel in examples:
+        select_sam = examples[int(len(examples)/2):]
+        print len(select_sam)
+
+
+        for bow, goldlabel in select_sam:
             t += 1
 
             all_feat_vec = fullseq_features(bow,stat_cuisine)
@@ -155,7 +178,7 @@ def train(examples, stat_cuisine, stepsize=1, numpasses=10, do_averaging=False, 
                 ##positive add for goldfeats
                 goldfeats = all_feat_vec[goldlabel]
                 for feat_name, feat_value in goldfeats.iteritems():
-                    weights[feat_name] += stepsize * feat_value
+                    weights[feat_name] += stepsize * feat_value*20
                     weightSums[feat_name] += (t-1) * stepsize * feat_value
 
                 ## negative for bad feats
@@ -164,20 +187,23 @@ def train(examples, stat_cuisine, stepsize=1, numpasses=10, do_averaging=False, 
                         wrongfeats = all_feat_vec[cuisine] 
 
                         for feat_name, feat_value in wrongfeats.iteritems():
-                            weights[feat_name] -= stepsize * feat_value
-                            weightSums[feat_name] -= (t-1) * stepsize * feat_value
+                            weights[feat_name] += stepsize * feat_value
+                            weightSums[feat_name] += (t-1) * stepsize * feat_value
+
         end = time.time()
-        print "\ttime used: " + str(round(end - start,2))
+        print "\ttime used training: " + str(round(end - start,2))
         print "TR RAW EVAL:",
-        train_acc.append(do_evaluation(examples, weights,all_feat_vec))
+        train_acc.append(do_evaluation(select_sam, weights,stat_cuisine))
 
         if devdata:
             print "DEV RAW EVAL:",
-            test_acc.append(do_evaluation(devdata, weights,all_feat_vec))
+            test_acc.append(do_evaluation(devdata, weights,stat_cuisine))
 
         if devdata and do_averaging:
             print "DEV AVG EVAL:",
-            avg_test_acc.append(do_evaluation(devdata, get_averaged_weights(),all_feat_vec))
+            avg_test_acc.append(do_evaluation(devdata, get_averaged_weights(),stat_cuisine))
+            testend = time.time()
+            print "\ttotal time this round: " + str(round(testend - start,2))
 
     print "[learned weights for %d features from %d examples.]" % (len(weights), len(examples))
 
@@ -235,8 +261,8 @@ if __name__=='__main__':
     training = data[slicenum:]
     testing = data[:slicenum]
 
-    training_set = construct_dataset(data)
-    ##test_set = construct_dataset(testing)
+    training_set = construct_dataset(data)  ## full dataset
+    test_set = construct_dataset(testing)
     ##print training_set[0]
 
     stat_cuisine = get_stats_count(training)
@@ -245,5 +271,5 @@ if __name__=='__main__':
     ##print len(stat_ingredient)
 
     ##sol_dict = train(training_set, stat_cuisine,stepsize=1, numpasses=1, do_averaging=True, devdata=None)
-    sol_dict = train(training_set, stat_cuisine,stepsize=1, numpasses=10, do_averaging=True, devdata=None)
+    sol_dict = train(training_set, stat_cuisine,stepsize=20, numpasses=10, do_averaging=True, devdata=test_set)
     plot_accuracy_vs_iteration(sol_dict['train_acc'], sol_dict['test_acc'], sol_dict['avg_test_acc'])
