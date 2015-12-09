@@ -126,12 +126,6 @@ def predict_multiclass(bow, weights, all_feat_vec,ing_count_adj=None):  ##takes 
     weights for features of each label (represented as a dictionary) and
     performs perceptron multi-class classification (i.e., finds the class with the highest
     score under the model.
-
-    You may find it peculiar that the name of this function has to do with multiclass
-    classification or that we are making predictions in this relatively complicated way
-    given the binary classification setting. You are correct; this is a bit weird. But,
-    this code looks a lot like the code for multiclass perceptron and the structured
-    perceptron (i.e., making the next part of this homework easier).
     """
     scores = defaultdict()
     for cuisine in all_feat_vec:
@@ -169,6 +163,7 @@ def train(examples, stat_cuisine, ing_count_adj=None,stepsize=1, numpasses=10, d
 
 
     ing_adj_vec = fullseq_features(ing_count_adj,stat_cuisine)
+    
     print "[training...]"
     for pass_iteration in range(numpasses):
         start = time.time()
