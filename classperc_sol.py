@@ -103,29 +103,62 @@ def construct_dataset(training_set):
 
 def fullseq_features(bow, stat_cuisine):
     """
-    The full f(x,y) function. Pass in features (represented as a dictionary) and
-    a string label. Returns one big feature vector (that is used for all classes).
+    generate feature vectors from baw
     """
     all_feat_vec = defaultdict()
     for cuisine in stat_cuisine:
         feat_vec = defaultdict(float)
 
         ##split ingredient into individual words
-        for ingredient, value in bow.iteritems():
-            #ing_word = ingredient.split(' ')
-            #for word in ing_word:
+        for ingredient, value in bow.iteritems() :
+            if ingredient is not None:
+                #ing_word = ingredient.split(' ')
+                #for word in ing_word:
+                ##reg bow :0.7669
                 feat_vec["%s_%s" % (cuisine, ingredient)] = value
+
+                ## added features ingredients:
+                if ('fresh' in ingredient):
+                    feat_vec["%s_%s"% (cuisine, 'fresh')] += 1
+                    ## 0.7677
+                if ('rice' in ingredient):
+                    feat_vec["%s_%s"% (cuisine, 'rice')] += 1
+                if ('creme' in ingredient):
+                    feat_vec["%s_%s"% (cuisine, 'crene')] += 1
+                if ('oil' in ingredient):
+                    feat_vec["%s_%s"% (cuisine, 'oil')] += 1
+                if ('olive' in ingredient):
+                    feat_vec["%s_%s"% (cuisine, 'olive')] += 1
+                if ('fat' in ingredient):
+                    feat_vec["%s_%s"% (cuisine, 'fat')] += 1
+                if ('sauce' in ingredient):
+                    feat_vec["%s_%s"% (cuisine, 'sauce')] += 1
+                if ('noodle' in ingredient):
+                    feat_vec["%s_%s"% (cuisine, 'sauce')] += 1
+                if ('pasta' in ingredient):
+                    feat_vec["%s_%s"% (cuisine, 'pasta')] += 1
+                if ('paste' in ingredient):
+                    feat_vec["%s_%s"% (cuisine, 'paste')] += 1
+                if ('leaf' in ingredient):
+                    feat_vec["%s_%s"% (cuisine, 'leaf')] += 1
+                if ('sausage' in ingredient):
+                    feat_vec["%s_%s"% (cuisine, 'sausage')] += 1
+
+
+        ## added features general:
+        feat_vec["%s_%s"% (cuisine, len(bow))] = 1
+        ## + 0.7678
+
 
         all_feat_vec[cuisine] = feat_vec
 
     return all_feat_vec
 
+
+
 def predict_multiclass(bow, weights, all_feat_vec,ing_count_adj=None):  ##takes list of same vec but diff cuisine
     """
-    Takes a bag of words represented as a dictionary and a weight vector that contains
-    weights for features of each label (represented as a dictionary) and
-    performs perceptron multi-class classification (i.e., finds the class with the highest
-    score under the model.
+    current weightss from bow * the existing feature vec in 20 diff cuisine
     """
     scores = defaultdict()
     for cuisine in all_feat_vec:
@@ -313,7 +346,7 @@ if __name__=='__main__':
     print "got stats by ingredient n classes"
 
     ##sol_dict = train(training_set, stat_cuisine,stepsize=1, numpasses=1, do_averaging=True, devdata=None)
-    sol_dict = train(training_set, stat_cuisine, ing_count_adj, stepsize=10, numpasses=10, do_averaging=True, devdata=test_self,outputonly=False)
+    sol_dict = train(training_set, stat_cuisine, ing_count_adj, stepsize=10, numpasses=5, do_averaging=True, devdata=test_self,outputonly=False)
 
     if len(sys.argv) ==3:
         output_csv_submission(sol_dict['weights'])
