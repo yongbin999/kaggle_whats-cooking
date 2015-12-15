@@ -43,6 +43,7 @@ def tokenize_doc(json_data):
     return words
 
 def get_stats_count(training_set):
+    ## cuisine size counts
     cuisine_type_count = defaultdict(float)
     for row in training_set:
         cuisine_type_count[row['cuisine']] +=1
@@ -50,6 +51,7 @@ def get_stats_count(training_set):
     return cuisine_type_count
 
 def get_ingredient_count(training_set):
+    ## ingre by cusine counts
     ing_count = defaultdict(float)
     for row in training_set:
         for ingredient in row['ingredients']:
@@ -58,7 +60,7 @@ def get_ingredient_count(training_set):
     return ing_count
 
 def get_model(training_set):
-
+    ##get base bow by cuisine 
     cuisine_type_bag = defaultdict()
     for row in training_set:
         for ingredient in row['ingredients']:
@@ -73,6 +75,7 @@ def get_model(training_set):
     return cuisine_type_bag
 
 def get_ingredient_count_class(ing_count, cuisine_type_bag):
+    ## get individual ingre and count how many cuisine it belongs to 
     ing_count_class =defaultdict(float)
     for each in ing_count:
         for cuisine,ingredients in cuisine_type_bag.items():
@@ -83,13 +86,7 @@ def get_ingredient_count_class(ing_count, cuisine_type_bag):
     return ing_count_class
 
 def construct_dataset(training_set):
-    """
-    Build a dataset. If train is true, build training set otherwise build test set.
-    The training set is a list of training examples. A training example is a tuple
-    containing a dictionary (that represents features of the training example) and
-    a label for that training instance (either 1 or -1).
-    """
-
+    ##with training data
     dataset = []
     print "[constructing dataset...]"
     for row in training_set:
@@ -103,7 +100,7 @@ def construct_dataset(training_set):
 
 def fullseq_features(bow, stat_cuisine):
     """
-    generate feature vectors from baw
+    generate feature vectors from bow
     """
     all_feat_vec = defaultdict()
     for cuisine in stat_cuisine:
@@ -112,15 +109,42 @@ def fullseq_features(bow, stat_cuisine):
         ##split ingredient into individual words
         for ingredient, value in bow.iteritems() :
             if ingredient is not None:
-                #ing_word = ingredient.split(' ')
-                #for word in ing_word:
                 ##reg bow :0.7669
                 feat_vec["%s_%s" % (cuisine, ingredient)] = value
+
+                ##add feature strip adjectives n-gram approach:
+                ing_words = ingredient.split(' ')
+                ing_phrase = ingredient.split(',')
+                if len(ing_phrase)>=2:
+                    ## replace instruction with just ingredient
+                    ing_words =ing_phrase
+
+                if len(ing_words)==2:
+                    ##6137/7954 = 0.7716 accuracy
+                    feat_vec["%s_%s" % (cuisine, ing_words[1])] +=1
+
+                if len(ing_words)==3:
+                    ##6155/7954 = 0.7738 accuracy
+                    feat_vec["%s_%s" % (cuisine, (' ').join(ing_words[1:]) )] +=1
+
+
+                if len(ing_words)==4:
+                    ##0.7737 accuracy
+                    feat_vec["%s_%s" % (cuisine, (' ').join(ing_words[1:-1]) )] +=1
+                    feat_vec["%s_%s" % (cuisine, (' ').join(ing_words[2:]) )] +=1
+
+                if len(ing_words)>4:
+                    ##
+                    feat_vec["%s_%s" % (cuisine, (' ').join(ing_words[len(ing_words)-1]) )] +=1
+                    feat_vec["%s_%s" % (cuisine, (' ').join(ing_words[len(ing_words)-2:]) )] +=1
+                    feat_vec["%s_%s" % (cuisine, (' ').join(ing_words[int(len(ing_words)/2)]) )] +=1
+                    feat_vec["%s_%s" % (cuisine, (' ').join(ing_words[int(len(ing_words)/2)+1]) )] +=1
+                    feat_vec["%s_%s" % (cuisine, (' ').join(ing_words[int(len(ing_words)/2):int(len(ing_words)/2)+1]) )] +=1
+
 
                 ## added features ingredients:
                 if ('fresh' in ingredient):
                     feat_vec["%s_%s"% (cuisine, 'fresh')] += 1
-                    ## 0.7677
                 if ('rice' in ingredient):
                     feat_vec["%s_%s"% (cuisine, 'rice')] += 1
                 if ('creme' in ingredient):
