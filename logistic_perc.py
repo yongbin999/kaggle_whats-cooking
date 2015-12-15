@@ -1,6 +1,7 @@
 from __future__ import division
 from collections import defaultdict
 from matplotlib import pyplot as plt
+import math
 
 import time
 import os
@@ -11,10 +12,25 @@ import random
 
 ###################################
 # Utilities
+def select_weighted(d): 
+##6180/7954 = 0.7770 accuracy +0.007
+    if sum(d.itervalues()) > 1:
+        offset = random.randint(0, int(sum(d.itervalues()))-1)
+        for k, v in d.iteritems():
+            if offset < v:
+                return k
+            offset -= value
+    else:
+        return max(d.iterkeys(), key=lambda k: d[k])
 
 def dict_argmax(dct):
     """Return the key whose value is largest. In other words: argmax_k dct[k]"""
-    return max(dct.iterkeys(), key=lambda k: dct[k])
+    ##print dct
+    ##print max(dct.iterkeys(), key=lambda k: dct[k])
+    ##print dct.items()
+    ##print select_weighted(dct)
+
+    return select_weighted(dct)
 
 def dict_dotprod(d1, d2):
     """Return the dot product (aka inner product) of two vectors, where each is
@@ -127,14 +143,14 @@ def fullseq_features(bow, stat_cuisine):
                     ##6155/7954 = 0.7738 accuracy
                     feat_vec["%s_%s" % (cuisine, (' ').join(ing_words[1:]) )] +=1
 
-
+                """
                 if len(ing_words)==4:
                     ##0.7737 accuracy
                     feat_vec["%s_%s" % (cuisine, (' ').join(ing_words[1:-1]) )] +=1
                     feat_vec["%s_%s" % (cuisine, (' ').join(ing_words[2:]) )] +=1
 
                 if len(ing_words)>4:
-                    ##
+                    ##6137/7954 = 0.7716 accuracy
                     feat_vec["%s_%s" % (cuisine, (' ').join(ing_words[len(ing_words)-1]) )] +=1
                     feat_vec["%s_%s" % (cuisine, (' ').join(ing_words[len(ing_words)-2:]) )] +=1
                     feat_vec["%s_%s" % (cuisine, (' ').join(ing_words[int(len(ing_words)/2)]) )] +=1
@@ -167,7 +183,7 @@ def fullseq_features(bow, stat_cuisine):
                     feat_vec["%s_%s"% (cuisine, 'leaf')] += 1
                 if ('sausage' in ingredient):
                     feat_vec["%s_%s"% (cuisine, 'sausage')] += 1
-
+                """
 
         ## added features general:
         feat_vec["%s_%s"% (cuisine, len(bow))] = 1
@@ -273,11 +289,9 @@ def train(examples, stat_cuisine, ing_count_adj=None,stepsize=1, numpasses=10, d
 
             print "[learned weights for %d features from %d examples.]" % (len(weights), len(examples))
 
-    print "final score:",
+    print "final score:"
     select_sam = select_sam[:int(len(select_sam)/10)]
-    do_evaluation(select_sam, weights,stat_cuisine)
-    test_acc.append(do_evaluation(devdata, weights,stat_cuisine))
-    avg_test_acc.append(do_evaluation(devdata, get_averaged_weights(),stat_cuisine))
+    final_evaluation(select_sam, weights,stat_cuisine)
     
     return { 'train_acc': train_acc,
              'test_acc': test_acc,
@@ -298,6 +312,25 @@ def do_evaluation(examples, weights, stat_cuisine):
         num_total += 1.0
     print "%d/%d = %.4f accuracy" % (num_correct, num_total, num_correct/num_total)
     return num_correct/num_total
+
+def final_evaluation(examples, weights, stat_cuisine):
+    """
+    Compute the accuracy of a trained perceptron.
+    """
+    incorrects = []
+    for feats, goldlabel in examples:
+        all_feat_vec = fullseq_features(feats,stat_cuisine)
+        predlabel = predict_multiclass(feats, weights,all_feat_vec)
+        if predlabel != goldlabel:
+            incorrects.append((predlabel,goldlabel,feats))
+
+    outfile = open( 'final_errors', 'w' )
+    outfile.write( 'pred' + ',' + 'gold' + 'feats' + '\n')
+    for each in incorrects:
+        outfile.write( str(each[0]) + ',' + str(each[1]) + str(each[2]) +  '\n' )
+
+    print "output errors"
+    
 
 def plot_accuracy_vs_iteration(train_acc, test_acc, avg_test_acc, naive_bayes_acc = 0.73):
     """
@@ -355,7 +388,11 @@ if __name__=='__main__':
     training = data[slicenum:]
     testing = data[:slicenum]
 
-    training_set = construct_dataset(training)  ## full dataset
+    if len(sys.argv) ==3:
+        training_set = construct_dataset(data)  ## full dataset
+    else:
+        training_set = construct_dataset(training)  ## full dataset
+
     test_self = construct_dataset(testing)
 
     stat_cuisine = get_stats_count(data)
@@ -370,7 +407,7 @@ if __name__=='__main__':
     print "got stats by ingredient n classes"
 
     ##sol_dict = train(training_set, stat_cuisine,stepsize=1, numpasses=1, do_averaging=True, devdata=None)
-    sol_dict = train(training_set, stat_cuisine, ing_count_adj, stepsize=10, numpasses=5, do_averaging=True, devdata=test_self,outputonly=False)
+    sol_dict = train(training_set, stat_cuisine, ing_count_adj, stepsize=10, numpasses=10, do_averaging=True, devdata=test_self,outputonly=False)
 
     if len(sys.argv) ==3:
         output_csv_submission(sol_dict['weights'])

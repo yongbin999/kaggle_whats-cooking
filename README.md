@@ -7,7 +7,7 @@ or
 python nb.py inputs/train.json inputs/test.json
 
 
-***precepetron: 73-77%
+***precepetron: 73-77% +77.7
 python logistic_perc.py inputs/train.json 
 or 
 python logistic_perc.py inputs/train.json inputs/test.json
