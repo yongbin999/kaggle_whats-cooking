@@ -33,7 +33,6 @@ def scikit_GDS(x,y, X_test,y_test=None, prevmodel="yes", output=False):
     if prevmodel !="yes":
     	clf.fit(X, y)
     	joblib.dump(clf, 'trained_GDS_model.pkl') 
-    	print "done"
     else:
     	clf =joblib.load('trained_GDS_model.pkl')
 
@@ -129,7 +128,7 @@ if __name__=='__main__':
 
 
 
-## GDS = 70%
+## GDS 7552 / 9774 = 0.772662164927
     print "running gradient descent"
     scikit_GDS(X,y,X_test,y_test,"yes")
 
