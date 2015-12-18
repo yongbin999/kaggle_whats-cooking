@@ -1,0 +1,45 @@
+pred,goldfeats
+chinese,korean{'napa cabbage': 1, 'rice vinegar': 1, 'red chili peppers': 1, 'ginger ale': 1, 'carrots': 1, 'scallions': 1, 'watercress': 1, 'kosher salt': 1}
+british,french{'garlic cloves': 1, 'raspberry vinegar': 1, 'sugar': 1, 'raspberries': 1, 'demi-glace': 1, 'shallots': 1, 'boneless magret duck breast halves': 1, 'unsalted butter': 1}
+southern_us,cajun_creole{'garlic powder': 1, 'ground red pepper': 1, 'ground black pepper': 1, 'kosher salt': 1, 'dried thyme': 1, 'paprika': 1, 'ground cumin': 1}
+italian,southern_us{'vegetable oil': 1, 'large eggs': 1, 'yellow corn meal': 1, 'baking powder': 1, 'all-purpose flour': 1, 'salt': 1, 'milk': 1}
+southern_us,irish{'vegetable oil': 1, 'dijon mustard': 1, 'pepper': 1, 'low sodium chicken broth': 1, 'salt': 1, 'cooked chicken': 1, 'all-purpose flour': 1, 'yukon gold potatoes': 1, 'onions': 1, 'milk': 1, 'unsalted butter': 1}
+moroccan,spanish{'garlic cloves': 1, 'pepper': 1, 'cider vinegar': 1, 'potatoes': 1, 'dry white wine': 1, 'kalamata': 1, 'pork shoulder butt': 1, 'cayenne': 1, 'ground cumin': 1, 'lemon juice': 1, 'extra-virgin olive oil': 1, 'chopped cilantro': 1, 'ground coriander': 1, 'kosher salt': 1}
+italian,southern_us{'butter': 1, 'water': 1, 'granulated sugar': 1, 'vanilla extract': 1, 'slivered almonds': 1, 'large eggs': 1, 'ice water': 1, 'cooking spray': 1, 'peaches': 1, 'brown sugar': 1, 'ground cinnamon': 1, 'salt': 1, 'all-purpose flour': 1}
+british,french{'butter': 1, 'pepper': 1, 'sirloin': 1, 'flour': 1, 'sage': 1, 'fresh parsley leaves': 1, 'wide egg noodles': 1, 'bacon': 1, 'fresh chives': 1, 'white mushrooms': 1, 'beef stock': 1, 'Burgundy wine': 1, 'pearl onions': 1, 'salt': 1}
+mexican,indian{'ground cloves': 1, 'chipotles in adobo': 1, 'chili powder': 1, 'boneless chicken skinless thigh': 1, 'onions': 1, 'large garlic cloves': 1, 'fresh ginger': 1, 'white wine vinegar': 1, 'red bell pepper': 1, 'ground cinnamon': 1, 'rice': 1, 'ground coriander': 1, 'ground cumin': 1, 'chopped cilantro fresh': 1}
+italian,greek{'olive oil': 1, 'crushed red pepper': 1, 'plum tomatoes': 1, 'fresh oregano': 1, 'fresh basil': 1, 'squid': 1, 'dry red wine': 1, 'tomato paste': 1, 'fresh parsley': 1, 'onions': 1}
+spanish,mexican{'olive oil': 1, 'red wine vinegar': 1, 'pork tenderloin': 1, 'minced garlic': 1, 'dried oregano': 1, 'paprika': 1, 'lime wedges': 1, 'salt': 1, 'ground cumin': 1}
+japanese,brazilian{'butter': 1, 'shredded coconut': 1, 'coconut milk': 1, 'vanilla extract': 1, 'raw honey': 1}
+chinese,japanese{'vinegar': 1, 'sugar': 1, 'sesame oil': 1, 'cucumber': 1, 'salt': 1, 'green onions': 1, 'toasted sesame seeds': 1}
+mexican,thai{'corn starch': 1, 'rice vinegar': 1, 'cold water': 1, 'minced garlic': 1, 'sugar': 1, 'water': 1, 'crushed red pepper flakes': 1, 'salt': 1, 'Sriracha': 1}
+southern_us,cajun_creole{'vegetable oil': 1, 'pepper': 1, 'distilled vinegar': 1, 'crawfish': 1, 'creole mustard': 1, 'cayenne': 1, 'celery ribs': 1, 'scallions': 1, 'horseradish': 1, 'all-purpose flour': 1, 'radicchio': 1, 'romaine lettuce': 1, 'paprika': 1, 'salt': 1}
+chinese,cajun_creole{'vegetable oil': 1, 'all-purpose flour': 1}
+moroccan,spanish{'olive oil': 1, 'cilantro': 1, 'lemon': 1, 'potatoes': 1, 'eggs': 1, 'chiles': 1, 'garlic': 1, 'yellow onion': 1, 'capers': 1, 'sea salt': 1}
+mexican,southern_us{'vegetable oil': 1, 'plantains': 1, 'frozen corn': 1, 'avocado': 1, 'baking powder': 1, 'extra-virgin olive oil': 1, 'garlic': 1, 'fresh lime juice': 1, 'orange': 1, 'salt': 1}
+italian,brazilian{'olive oil': 1, 'garlic cloves': 1, 'pepper': 1, 'bay leaf': 1, 'chicken broth': 1, 'worcestershire sauce': 1, 'parsley': 1, 'black beans': 1, 'shallots': 1, 'salt': 1}
+indian,irish{'vegetable oil': 1, 'whole wheat flour': 1, 'baking soda': 1, 'buttermilk': 1, 'all-purpose flour': 1, 'white sugar': 1, 'salt': 1, 'milk': 1}
+chinese,vietnamese{'olive oil': 1, 'asparagus': 1, 'toasted sesame oil': 1, 'scallions': 1, 'honey': 1, 'garlic': 1, 'soy sauce': 1, 'boneless skinless chicken breasts': 1, 'toasted sesame seeds': 1}
+brazilian,mexican{'olive oil': 1, 'spanish chorizo': 1, 'ground black pepper': 1, 'white rice': 1, 'saffron': 1, 'shallots': 1, 'flat leaf parsley': 1, 'medium shrimp': 1, 'frozen peas': 1, 'kosher salt': 1}
+italian,french{'olive oil': 1, 'roast red peppers, drain': 1, 'dijon mustard': 1, 'dry white wine': 1, 'canned low sodium chicken broth': 1, 'chunk light tuna in water': 1, 'sugar': 1, 'white wine vinegar': 1, 'salad greens': 1, 'oliv pit ripe': 1, 'egg whites': 1, 'dried thyme': 1, 'capers': 1, 'red potato': 1, 'fresh green bean': 1}
+cajun_creole,italian{'mushrooms': 1, 'dressing': 1, 'green bell pepper': 1, 'onions': 1, 'tomatoes': 1, 'fusilli': 1}
+southern_us,french{'butter': 1, 'pepper': 1, 'sliced almonds': 1, 'lemon juice': 1, 'salt': 1, 'fresh green bean': 1}
+irish,french{'whole milk': 1, 'large eggs': 1, 'raisins': 1, 'large egg yolks': 1, 'powdered sugar': 1, 'all-purpose flour': 1, 'golden raisins': 1, 'whipping cream': 1, 'salt': 1}
+chinese,southern_us{'large eggs': 1, 'vanilla': 1, 'sugar': 1, 'cake flour': 1, 'unsalted butter': 1}
+italian,french{'garlic cloves': 1, 'dijon mustard': 1, 'black pepper': 1, 'green olives': 1, 'capers': 1, 'fresh parsley': 1, 'fresh lemon juice': 1, 'artichoke hearts': 1}
+italian,greek{'olive oil': 1, 'red wine vinegar': 1, 'minced garlic': 1, 'dried oregano': 1, 'lemon juice': 1, 'dried thyme': 1, 'boneless skinless chicken breasts': 1}
+italian,french{'whole milk': 1, 'unflavored gelatin': 1, 'almond extract': 1, 'unsalted pistachios': 1, 'cold water': 1, 'sugar': 1, 'heavy cream': 1}
+italian,moroccan{'superfine sugar': 1, 'dried oregano': 1, 'cucumber': 1, 'fresh orange juice': 1}
+italian,french{'almond extract': 1, 'large eggs': 1, 'vanilla': 1, 'pears': 1, 'milk': 1, 'self-rising cake flour': 1, 'sugar': 1, 'fresh lemon juice': 1, 'blanched almonds': 1, 'unsalted butter': 1}
+chinese,thai{'grapeseed oil': 1, 'rice vinegar': 1, 'eggs': 1, 'fish sauce': 1, 'dark sesame oil': 1, 'garlic': 1, 'pork loin': 1, 'oyster sauce': 1, 'gai lan': 1}
+southern_us,italian{'tea bags': 1, 'cranberry juice': 1, 'sugar': 1}
+italian,spanish{'olive oil': 1, 'ground pepper': 1, 'kosher salt': 1, 'eggplant': 1}
+italian,spanish{'extra-virgin olive oil': 1, 'baking potatoes': 1}
+greek,indian{'vegetable oil': 1, 'white vinegar': 1, 'ground allspice': 1, 'lemon juice': 1, 'chicken': 1, 'salt': 1, 'plain yogurt': 1}
+irish,southern_us{'corn starch': 1, 'ground black pepper': 1, 'egg whites': 1, 'carrots': 1, 'soy sauce': 1, 'white sugar': 1, 'margarine': 1, 'white bread': 1, 'boneless skinless chicken breast halves': 1, 'ground ginger': 1}
+southern_us,cajun_creole{'garlic powder': 1, 'ground red pepper': 1, 'low-fat buttermilk': 1, 'iceberg lettuce': 1, 'mayonaise': 1, 'salt': 1, 'dry bread crumbs': 1, 'french bread': 1, 'egg whites': 1, 'black pepper': 1, 'cornmeal': 1, 'oysters': 1, 'tomatoes': 1, 'vegetable oil cooking spray': 1}
+filipino,brazilian{'water': 1, 'eggs': 1, 'milk': 1, 'condensed milk': 1, 'sugar': 1}
+spanish,italian{'olive oil': 1, 'garlic cloves': 1, 'bay leaf': 1, 'chopped onion': 1, 'long-grain rice': 1, 'dry white wine': 1, 'escarole': 1, 'fat free less sodium chicken broth': 1, 'fresh thyme leaves': 1, 'salt': 1, 'boneless skinless chicken breasts': 1}
+japanese,russian{'vegetable oil': 1, 'coffee': 1, 'yeast': 1, 'flour': 1, 'eggs': 1, 'sugar': 1, 'salad oil': 1, 'salt': 1, 'milk': 1}
+chinese,thai{'honey': 1, 'toasted sesame oil': 1, 'rice vinegar': 1, 'mayonaise': 1, 'canola oil': 1, 'ginger': 1, 'soy sauce': 1, 'sesame seeds': 1, 'garlic': 1, 'hot water': 1, 'spaghetti': 1, 'peanut butter': 1, 'shredded carrots': 1}
+british,italian{'ground cloves': 1, 'water': 1, 'large egg whites': 1, 'vanilla extract': 1, 'pecans': 1, 'ground nutmeg': 1, 'golden brown sugar': 1, 'English toffee bits': 1, 'whipped cream': 1, 'sugar': 1, 'honey': 1, 'cr\xc3\xa8me fra\xc3\xaeche': 1, 'gingersnap cookie crumbs': 1, 'light corn syrup': 1, 'ground cinnamon': 1, 'ground cardamom': 1, 'whipping cream': 1, 'pumpkin': 1, 'salt': 1, 'ground ginger': 1, 'unsalted butter': 1}

@@ -90,6 +90,25 @@ def get_model(training_set):
     
     return cuisine_type_bag
 
+def ingre_list_stats(training_set):
+    ##get base bow by cuisine 
+    ingstats = []
+    lenstats =[]
+    for row in training_set:
+        lenstats.append(len(row['ingredients']))
+
+        for ingredient in row['ingredients']:
+            ingstats.append(len(ingredient.split(' ')))
+            if len(ingredient.split(' ')) >=10:
+                print ingredient
+
+    print " ingr states" 
+    print max(ingstats)
+    print min(ingstats)
+    print max(lenstats)
+    print min(lenstats)
+
+
 def get_ingredient_count_class(ing_count, cuisine_type_bag):
     ## get individual ingre and count how many cuisine it belongs to 
     ing_count_class =defaultdict(float)
@@ -397,7 +416,9 @@ if __name__=='__main__':
 
     stat_cuisine = get_stats_count(data)
     stat_ingredient = get_ingredient_count(data)
-    ##print len(stat_ingredient)
+    ingre_list_stats(data)
+
+
     cuisine_type_bag = get_model(data)
     ing_count_adj=get_ingredient_count_class(stat_ingredient,cuisine_type_bag)
     for key, value in ing_count_adj.items():
@@ -407,7 +428,7 @@ if __name__=='__main__':
     print "got stats by ingredient n classes"
 
     ##sol_dict = train(training_set, stat_cuisine,stepsize=1, numpasses=1, do_averaging=True, devdata=None)
-    sol_dict = train(training_set, stat_cuisine, ing_count_adj, stepsize=10, numpasses=10, do_averaging=True, devdata=test_self,outputonly=False)
+    sol_dict = train(training_set, stat_cuisine, ing_count_adj, stepsize=1, numpasses=10, do_averaging=True, devdata=test_self,outputonly=False)
 
     if len(sys.argv) ==3:
         output_csv_submission(sol_dict['weights'])
