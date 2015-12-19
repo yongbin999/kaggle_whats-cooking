@@ -25,9 +25,9 @@ def select_weighted(d):
 
 def dict_argmax(dct):
     """Return the key whose value is largest. In other words: argmax_k dct[k]"""
-    ##print dct
-    ##print max(dct.iterkeys(), key=lambda k: dct[k])
-    ##print dct.items()
+    #print 
+    #print max(dct.iterkeys(), key=lambda k: dct[k])
+    #print dct.items()
     ##print select_weighted(dct)
 
     return select_weighted(dct)
@@ -150,9 +150,14 @@ def fullseq_features(bow, stat_cuisine):
                 ##add feature strip adjectives n-gram approach:
                 ing_words = ingredient.split(' ')
                 ing_phrase = ingredient.split(',')
+                of_phrase = ingredient.split('of')
                 if len(ing_phrase)>=2:
                     ## replace instruction with just ingredient
                     ing_words =ing_phrase
+                if len(of_phrase)>=2:
+                    ## replace instruction with just of split
+                    ing_words =of_phrase
+
 
                 if len(ing_words)==2:
                     ##6137/7954 = 0.7716 accuracy
@@ -194,14 +199,8 @@ def fullseq_features(bow, stat_cuisine):
                     feat_vec["%s_%s"% (cuisine, 'sauce')] += 1
                 if ('noodle' in ingredient):
                     feat_vec["%s_%s"% (cuisine, 'sauce')] += 1
-                if ('pasta' in ingredient):
-                    feat_vec["%s_%s"% (cuisine, 'pasta')] += 1
-                if ('paste' in ingredient):
-                    feat_vec["%s_%s"% (cuisine, 'paste')] += 1
-                if ('leaf' in ingredient):
-                    feat_vec["%s_%s"% (cuisine, 'leaf')] += 1
-                if ('sausage' in ingredient):
-                    feat_vec["%s_%s"% (cuisine, 'sausage')] += 1
+                if ('Hunt\'s' in ingredient):
+                    feat_vec["%s_%s"% (cuisine, 'tomato')] += 1
                 """
 
         ## added features general:
@@ -428,7 +427,7 @@ if __name__=='__main__':
     print "got stats by ingredient n classes"
 
     ##sol_dict = train(training_set, stat_cuisine,stepsize=1, numpasses=1, do_averaging=True, devdata=None)
-    sol_dict = train(training_set, stat_cuisine, ing_count_adj, stepsize=1, numpasses=10, do_averaging=True, devdata=test_self,outputonly=False)
+    sol_dict = train(training_set, stat_cuisine, ing_count_adj, stepsize=1, numpasses=5, do_averaging=True, devdata=test_self,outputonly=False)
 
     if len(sys.argv) ==3:
         output_csv_submission(sol_dict['weights'])

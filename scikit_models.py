@@ -145,7 +145,7 @@ if __name__=='__main__':
 
 
 
-## one vs rest  memory error
+## one vs one  memory error
     #print "one vs rest"
     ##scikit_onevsone(X,y,X_test,y_test)
 
