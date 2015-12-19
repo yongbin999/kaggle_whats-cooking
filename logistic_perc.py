@@ -342,8 +342,8 @@ def final_evaluation(examples, weights, stat_cuisine):
         if predlabel != goldlabel:
             incorrects.append((predlabel,goldlabel,feats))
 
-    outfile = open( 'final_errors', 'w' )
-    outfile.write( 'pred' + ',' + 'gold' + 'feats' + '\n')
+    outfile = open( './outputs/final_errors.csv', 'w' )
+    outfile.write( 'pred' + ',' + 'gold' +',' + 'feats' + '\n')
     for each in incorrects:
         outfile.write( str(each[0]) + ',' + str(each[1]) + str(each[2]) +  '\n' )
 
@@ -415,7 +415,7 @@ if __name__=='__main__':
 
     stat_cuisine = get_stats_count(data)
     stat_ingredient = get_ingredient_count(data)
-    ingre_list_stats(data)
+    ##ingre_list_stats(data)
 
 
     cuisine_type_bag = get_model(data)
