@@ -8,9 +8,9 @@ python nb.py inputs/train.json inputs/test.json
 
 
 ***precepetron: 73-77% +78.2 with features
-python logistic_perc.py inputs/train.json 
-or 
-python logistic_perc.py inputs/train.json inputs/test.json
+<br>python logistic_perc.py inputs/train.json 
+<Br>or 
+<br>python logistic_perc.py inputs/train.json inputs/test.json
 
 
 
