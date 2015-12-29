@@ -1,5 +1,6 @@
 # kaggle_whats-cooking
-NLP figure out the cusine type from just the ingredients. 
+The goal of this project is to classify cuisines based on a list of ingredients from Kaggle Data Challenge dataset. My approach was to establish a baseline model using Naïve Bayes, then test performance against logistic models, and use model libraries such as Scikit-learn. The baseline NB model performed at 73% accuracy, Logistic Percepetron at 78%, and out-of-box Scikit-learn models around 77%. The top rank model in Kaggle stands at 83%.
+
 
 ***nb results: 55-73%
 python nb.py inputs/train.json
